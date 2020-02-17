@@ -1,0 +1,17 @@
+sudo vi /etc/dhcpcd.conf
+sudo systemctl enable dhcpcd
+
+sudo nano /etc/sysctl.conf
+sudo sed -i 's/^#net.ipv4.ip_forward=1.*/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+
+sudo sh tablereset.sh
+sudo iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+sudo iptables -A FORWARD -i wlan0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i eth0 -o wlan0 -j ACCEPT
+sudo iptables -L -n -v
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+
+sudo apt-get update
+sudo apt-get install python3-pip
+sudo pip3 install BytesIO

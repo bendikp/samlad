@@ -1,0 +1,16 @@
+# /etc/systemd/system/webserver.service
+[Unit]
+Description=HTTP POST Web Server
+After=network.target
+
+[Service]
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/usr/bin/python3 app.py
+WorkingDirectory=/home/pi/http
+#StandardOutput=inherit
+#StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
